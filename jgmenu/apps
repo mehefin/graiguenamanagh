@@ -1,0 +1,19 @@
+# example config
+
+web,^checkout(web)
+soft,^checkout(soft)
+emu,^checkout(emu)
+
+^tag(web)
+qute, qutebrowser
+gram, telegram-desktop
+
+^tag(soft)
+kri, krita
+
+^tag(emu)
+game name, path to its binary
+# it's like
+# metroid fusion, mgba-qt "$HOME/games/metroid-fusion.gba"
+# or pipe a list of desktop files to jgmenu
+# to do this, read jgmenu documentation carefully

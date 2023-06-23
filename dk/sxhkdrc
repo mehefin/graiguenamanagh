@@ -1,0 +1,59 @@
+# app launcher
+super + l
+	jgmenu --csv-file="$HOME/.config/jgmenu/entries/apps"
+# terminal
+super + j
+	kitty
+# volume up
+super + grave
+	pactl set-sink-volume @DEFAULT_SINK@ +10%
+# volume down
+super + Tab
+	pactl set-sink-volume @DEFAULT_SINK@ -10%
+# down to zero or mute/unmute
+super + 2
+	pactl set-sink-volume @DEFAULT_SINK@ 0%
+super + 1
+	{pactl set-sink-mute @DEFAULT_SINK@ true,pactl set-sink-mute @DEFAULT_SINK@ false}
+# full screen shot
+super + F1
+	scrot -z -e 'mv $f /tmp'
+# current window shot
+super + F2
+	scrot -uz -e 'mv $f /tmp'
+# specific area shot
+super + F3
+	cd /tmp && import $(date +%F-%T).png
+# quit dk
+ctrl + shift + q
+	dkcmd exit
+# restart dk
+ctrl + shift + r
+	dkcmd restart
+# focus next window
+super + i
+	dkcmd win focus next
+# cycle windows in place
+super + shift + i
+	dkcmd win cycle
+# close window
+super + shift + z
+	dkcmd win kill
+# toggle fullscreen
+super + v
+	dkcmd win full
+# toggle floating
+super + c
+	dkcmd win {float,stick}
+# go to another workspace
+super + {q,w,e,a,s,d}
+	dkcmd ws view {1,2,3,4,5,6}
+# send window to another workspace
+super + shift + {q,w,e,a,s,d}
+	dkcmd ws send {1,2,3,4,5,6}
+# switch to previous or next workspace
+super + {z,x}
+	dkcmd ws view {prev,next}
+# change layout
+super + o
+	dkcmd set layout {tstack,grid}

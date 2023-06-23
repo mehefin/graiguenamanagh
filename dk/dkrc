@@ -1,0 +1,47 @@
+#!/bin/sh
+logfile="$HOME/.dkrc.log"
+[ -d "$HOME/.local/share/xorg" ] && logfile="$HOME/.local/share/xorg/dkrc.log"
+: > "$logfile"
+if hash sxhkd >/dev/null 2>&1; then
+	pkill sxhkd
+	sxhkd -c "$HOME/.config/dk/sxhkdrc" &
+fi
+{
+	dkcmd set numws=6
+	dkcmd set ws=_ apply layout=tstack gap=8
+	dkcmd set \
+		ws=1 name="1" \
+		ws=2 name="2" \
+		ws=3 name="3" \
+		ws=4 name="4" \
+		ws=5 name="5" \
+		ws=6 name="6"
+	dkcmd set focus_open=true focus_urgent=true focus_mouse=false
+	dkcmd set tile_tohead=0 tile_hints=false
+	dkcmd set win_minwh=50 win_minxy=10
+	dkcmd set smart_gap=false smart_border=false
+	dkcmd set mouse mod=super move=button1 resize=button3
+	dkcmd set border width=0 outer_width=0 \
+		colour \
+		focus='#ebebeb' \
+		unfocus='#0c0c0c' \
+		urgent='#888888' \
+		outer_focus='#ebebeb' \
+		outer_unfocus='#0c0c0c' \
+		outer_urgent='#888888'
+	dkcmd rule class="^chromium$" mon="HDMI-A-0"
+	dkcmd rule class="^mpv$" instance="^albumart$" float=true ignore=true callback=albumart bw=0
+	dkcmd rule class="^(pavucontrol|transmission-gtk|steam|lxappearance)$" float=true
+	dkcmd rule class="^google-chrome$" title="^open files$" float=true w=1280 h=720
+	dkcmd rule class="^stickyterm$" stick=true float=true w=1280 h=720
+	dkcmd rule class="^firefox$" ws=1 focus=true
+	dkcmd rule class="^firefox$" mon="HDMI-A-0"
+	dkcmd rule remove class="^firefox$"
+	dkcmd rule apply '*'
+} >> "$logfile" 2>&1 # append responses
+if grep -q 'error:' "$logfile"; then
+	hash notify-send && notify-send -t 0 -u critical "dkrc has errors" \
+		"$(awk '/error:/ {sub(/^error: /, ""); gsub(/</, "\<"); print}' "$logfile")"
+	exit 1
+fi
+exit 0
